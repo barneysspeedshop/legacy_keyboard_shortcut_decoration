@@ -68,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 20),
             if (_textController.text.isNotEmpty)
               LegacyKeyboardShortcut(
+                key: const Key('shortcut_from_textfield'),
                 shortcut: _textController.text,
                 showIndividualKeys: _showIndividualKeys,
               ),

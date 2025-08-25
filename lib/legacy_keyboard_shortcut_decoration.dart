@@ -40,13 +40,13 @@ class LegacyKeyboardShortcut extends StatelessWidget {
     'F9',
     'F10',
     'F11',
-    'F12'
+    'F12',
   ];
 
   @override
   Widget build(BuildContext context) {
-    // Split the shortcut string into individual key strings, trimming whitespace
-    // and removing any empty parts.
+    // Split the shortcut string into individual key strings,
+    // trimming whitespace and removing any empty parts.
     final keys = _sortKeys(shortcut);
 
     if (keys.isEmpty) {
@@ -81,10 +81,12 @@ class LegacyKeyboardShortcut extends StatelessWidget {
       }
     }
 
-    modifierKeys.sort((a, b) =>
-        _modifierKeys.indexOf(a).compareTo(_modifierKeys.indexOf(b)));
+    modifierKeys.sort(
+      (a, b) => _modifierKeys.indexOf(a).compareTo(_modifierKeys.indexOf(b)),
+    );
     functionKeys.sort(
-        (a, b) => _functionKeys.indexOf(a).compareTo(_functionKeys.indexOf(b)));
+      (a, b) => _functionKeys.indexOf(a).compareTo(_functionKeys.indexOf(b)),
+    );
     otherKeys.sort();
 
     return [...modifierKeys, ...functionKeys, ...otherKeys];
@@ -125,7 +127,7 @@ class LegacyKeyboardShortcut extends StatelessWidget {
             style: TextStyle(
               fontSize: decoration.fontSize,
               fontWeight: FontWeight.normal,
-              color: textColor.withOpacity(0.8),
+              color: textColor.withAlpha(204),
             ),
           ),
         );
@@ -187,8 +189,8 @@ class LegacyKeyboardShortcutDecoration {
   BoxDecoration getBoxDecoration(BuildContext context) {
     final theme = Theme.of(context);
     final keyColor = theme.colorScheme.surface;
-    final borderColor = theme.colorScheme.onSurface.withOpacity(0.2);
-    final shadowColor = theme.colorScheme.onSurface.withOpacity(0.2);
+    final borderColor = theme.colorScheme.onSurface.withAlpha(51);
+    final shadowColor = theme.colorScheme.onSurface.withAlpha(51);
 
     return BoxDecoration(
       color: keyColor,

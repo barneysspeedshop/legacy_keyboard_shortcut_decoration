@@ -1,12 +1,21 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:legacy_keyboard_shortcut_decoration/legacy_keyboard_shortcut_decoration.dart';
 
 void main() {
-  test('adds one to input values', () {
-    final calculator = Calculator();
-    expect(calculator.addOne(2), 3);
-    expect(calculator.addOne(-7), -6);
-    expect(calculator.addOne(0), 1);
+  testWidgets('LegacyKeyboardShortcut displays shortcut keys', (
+    WidgetTester tester,
+  ) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(body: LegacyKeyboardShortcut(shortcut: 'CTRL + C')),
+      ),
+    );
+
+    // Verify that the shortcut keys are displayed.
+    expect(find.text('CTRL'), findsOneWidget);
+    expect(find.text('C'), findsOneWidget);
+    expect(find.text('+'), findsOneWidget);
   });
 }

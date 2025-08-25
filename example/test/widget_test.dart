@@ -1,30 +1,39 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:flutter_example/main.dart';
+import 'package:legacy_keyboard_shortcut_decoration/legacy_keyboard_shortcut_decoration.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('LegacyKeyboardShortcut example smoke test', (
+    WidgetTester tester,
+  ) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify that the initial UI is as expected.
+    expect(find.byType(TextField), findsOneWidget);
+    expect(find.byType(Switch), findsOneWidget);
+    expect(find.byType(LegacyKeyboardShortcut), findsNWidgets(3));
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Enter a shortcut in the text field.
+    await tester.enterText(find.byType(TextField), 'CTRL+ALT+DEL');
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify that the new shortcut is displayed.
+    final shortcutFinder = find.byKey(const Key('shortcut_from_textfield'));
+    expect(shortcutFinder, findsOneWidget);
+
+    expect(
+      find.descendant(of: shortcutFinder, matching: find.text('CTRL')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: shortcutFinder, matching: find.text('ALT')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: shortcutFinder, matching: find.text('DEL')),
+      findsOneWidget,
+    );
   });
 }
