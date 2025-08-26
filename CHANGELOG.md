@@ -1,3 +1,7 @@
+## 0.0.4
+
+* Add proper screenshot
+
 ## 0.0.3
 
 * Prepare for initial release on pub.dev.
