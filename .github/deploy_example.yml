@@ -37,6 +37,9 @@ jobs:
           flutter pub get
           flutter build web --release --base-href /legacy_keyboard_shortcut_decoration/
 
+      - name: Verify build output
+        run: ls -R example/build/web
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
