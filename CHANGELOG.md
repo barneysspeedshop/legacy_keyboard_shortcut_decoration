@@ -1,3 +1,7 @@
+## 0.0.5
+
+* Add github action to deploy. Add badges and example to README.md
+
 ## 0.0.4
 
 * Add proper screenshot

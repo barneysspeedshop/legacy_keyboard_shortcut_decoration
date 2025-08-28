@@ -1,5 +1,9 @@
 # Legacy Keyboard Shortcut Decoration
 
+[![Pub Version](https://img.shields.io/pub/v/legacy_keyboard_shortcut_decoration.svg)](https://pub.dev/packages/legacy_keyboard_shortcut_decoration)
+[![Live Demo](https://img.shields.io/badge/live-demo-brightgreen)](https://barneysspeedshop.github.io/legacy_keyboard_shortcut_decoration/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 A Flutter package to display keyboard shortcuts with a nice, key-like decoration.
 Pass a string like `"CTRL + C"` and get a widget that visually represents the key combination.
 
