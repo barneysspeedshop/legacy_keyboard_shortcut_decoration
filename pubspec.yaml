@@ -1,6 +1,6 @@
 name: legacy_keyboard_shortcut_decoration
 description: "A Flutter package to display keyboard shortcuts with a nice, key-like decoration."
-version: 0.0.5
+version: 0.0.6
 homepage: https://github.com/barneysspeedshop/legacy_keyboard_shortcut_decoration
 repository: https://github.com/barneysspeedshop/legacy_keyboard_shortcut_decoration
 issue_tracker: https://github.com/barneysspeedshop/legacy_keyboard_shortcut_decoration/issues

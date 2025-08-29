@@ -27,7 +27,10 @@ class LegacyKeyboardShortcut extends StatelessWidget {
     this.showIndividualKeys = true,
   });
 
+  /// A list of modifier keys in a specific order for sorting.
   static const _modifierKeys = ['CTRL', 'ALT', 'SHIFT', 'META'];
+
+  /// A list of function keys in a specific order for sorting.
   static const _functionKeys = [
     'F1',
     'F2',
@@ -60,6 +63,9 @@ class LegacyKeyboardShortcut extends StatelessWidget {
     }
   }
 
+  /// Sorts the keys in the shortcut string.
+  ///
+  /// Modifier keys are sorted first, then function keys, then other keys alphabetically.
   List<String> _sortKeys(String shortcut) {
     final keys = shortcut
         .split('+')
@@ -92,6 +98,7 @@ class LegacyKeyboardShortcut extends StatelessWidget {
     return [...modifierKeys, ...functionKeys, ...otherKeys];
   }
 
+  /// Builds the shortcut as a single visual block.
   Widget _buildSingleBlock(BuildContext context, List<String> keys) {
     final theme = Theme.of(context);
     final textColor = theme.colorScheme.onSurface;
@@ -110,6 +117,7 @@ class LegacyKeyboardShortcut extends StatelessWidget {
     );
   }
 
+  /// Builds the shortcut as a series of individual key widgets.
   Widget _buildIndividualKeys(BuildContext context, List<String> keys) {
     final theme = Theme.of(context);
     final textColor = theme.colorScheme.onSurface;
@@ -162,6 +170,7 @@ class LegacyKeyboardShortcut extends StatelessWidget {
   }
 }
 
+/// Defines the visual appearance of the [LegacyKeyboardShortcut] widget.
 class LegacyKeyboardShortcutDecoration {
   /// The border radius of the key.
   final BorderRadius borderRadius;
@@ -178,6 +187,7 @@ class LegacyKeyboardShortcutDecoration {
   /// The font weight of the key label.
   final FontWeight fontWeight;
 
+  /// Creates a decoration for the [LegacyKeyboardShortcut] widget.
   const LegacyKeyboardShortcutDecoration({
     this.borderRadius = const BorderRadius.all(Radius.circular(4.0)),
     this.padding = const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
@@ -186,6 +196,7 @@ class LegacyKeyboardShortcutDecoration {
     this.fontWeight = FontWeight.bold,
   });
 
+  /// Creates a [BoxDecoration] for the keys based on the current theme.
   BoxDecoration getBoxDecoration(BuildContext context) {
     final theme = Theme.of(context);
     final keyColor = theme.colorScheme.surface;
