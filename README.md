@@ -12,10 +12,10 @@ Pass a string like `"CTRL + C"` and get a widget that visually represents the ke
 ## Features
 
 *   Display keyboard shortcuts from a string.
-*   Theme-aware: Adapts to light and dark mode.
-*   Customize border radius, spacing, and more.
+*   Theme-aware: Adapts to your app's light and dark modes.
+*   Highly customizable: Control colors (key, text, border, shadow), border radius and width, spacing, font size/weight, shadow properties, and more.
 *   Simple and lightweight.
-*   Handles multiple key combinations (e.g., "CTRL + ALT + DEL").
+*   Handles multiple key combinations (e.g., "CTRL + ALT + DEL") and recognizes common modifier keys like `CTRL`, `ALT`, `SHIFT`, `META`, and `SUPER`.
 
 ## Getting started
 
@@ -104,6 +104,24 @@ class _MyHomePageState extends State<MyHomePage> {
             if (_textController.text.isNotEmpty)
               LegacyKeyboardShortcut(
                 shortcut: _textController.text,
+              ),
+            const SizedBox(height: 20),
+            if (_textController.text.isNotEmpty)
+              LegacyKeyboardShortcut(
+                shortcut: _textController.text,
+                decoration: const LegacyKeyboardShortcutDecoration(
+                  keyColor: Colors.blue,
+                  textColor: Colors.white,
+                  borderColor: Colors.blueGrey,
+                  borderWidth: 2.0,
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  shadowColor: Colors.black54,
+                  shadowOffset: Offset(2, 2),
+                  shadowBlurRadius: 3.0,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w900,
+                  plusSignColor: Colors.white70,
+                ),
               ),
           ],
         ),

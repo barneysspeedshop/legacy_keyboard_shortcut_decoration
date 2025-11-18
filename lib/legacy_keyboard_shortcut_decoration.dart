@@ -28,7 +28,7 @@ class LegacyKeyboardShortcut extends StatelessWidget {
   });
 
   /// A list of modifier keys in a specific order for sorting.
-  static const _modifierKeys = ['CTRL', 'ALT', 'SHIFT', 'META'];
+  static const _modifierKeys = ['CTRL', 'ALT', 'SHIFT', 'META', 'SUPER'];
 
   /// A list of function keys in a specific order for sorting.
   static const _functionKeys = [
@@ -101,7 +101,7 @@ class LegacyKeyboardShortcut extends StatelessWidget {
   /// Builds the shortcut as a single visual block.
   Widget _buildSingleBlock(BuildContext context, List<String> keys) {
     final theme = Theme.of(context);
-    final textColor = theme.colorScheme.onSurface;
+    final textColor = decoration.textColor ?? theme.colorScheme.onSurface;
 
     return Container(
       padding: decoration.padding,
@@ -120,7 +120,8 @@ class LegacyKeyboardShortcut extends StatelessWidget {
   /// Builds the shortcut as a series of individual key widgets.
   Widget _buildIndividualKeys(BuildContext context, List<String> keys) {
     final theme = Theme.of(context);
-    final textColor = theme.colorScheme.onSurface;
+    final plusSignColor = decoration.plusSignColor ??
+        (decoration.textColor ?? theme.colorScheme.onSurface).withAlpha(204);
 
     final List<Widget> children = [];
     for (int i = 0; i < keys.length; i++) {
@@ -135,7 +136,7 @@ class LegacyKeyboardShortcut extends StatelessWidget {
             style: TextStyle(
               fontSize: decoration.fontSize,
               fontWeight: FontWeight.normal,
-              color: textColor.withAlpha(204),
+              color: plusSignColor,
             ),
           ),
         );
@@ -153,7 +154,7 @@ class LegacyKeyboardShortcut extends StatelessWidget {
   /// Builds a single key widget.
   Widget _buildKey(BuildContext context, String keyLabel) {
     final theme = Theme.of(context);
-    final textColor = theme.colorScheme.onSurface;
+    final textColor = decoration.textColor ?? theme.colorScheme.onSurface;
 
     return Container(
       padding: decoration.padding,
@@ -172,6 +173,24 @@ class LegacyKeyboardShortcut extends StatelessWidget {
 
 /// Defines the visual appearance of the [LegacyKeyboardShortcut] widget.
 class LegacyKeyboardShortcutDecoration {
+  /// The background color of the key.
+  ///
+  /// If null, `Theme.of(context).colorScheme.surface` is used.
+  final Color? keyColor;
+
+  /// The color of the key label text.
+  ///
+  /// If null, `Theme.of(context).colorScheme.onSurface` is used.
+  final Color? textColor;
+
+  /// The color of the '+' separator between keys.
+  ///
+  /// If null, it defaults to `textColor` with an alpha of 204.
+  final Color? plusSignColor;
+
+  /// The color of the border around the key.
+  final Color? borderColor;
+
   /// The border radius of the key.
   final BorderRadius borderRadius;
 
@@ -187,31 +206,56 @@ class LegacyKeyboardShortcutDecoration {
   /// The font weight of the key label.
   final FontWeight fontWeight;
 
+  /// The width of the border.
+  final double borderWidth;
+
+  /// The color of the shadow.
+  final Color? shadowColor;
+
+  /// The offset of the shadow.
+  final Offset shadowOffset;
+
+  /// The blur radius of the shadow.
+  final double shadowBlurRadius;
+
   /// Creates a decoration for the [LegacyKeyboardShortcut] widget.
   const LegacyKeyboardShortcutDecoration({
+    this.keyColor,
+    this.textColor,
+    this.plusSignColor,
+    this.borderColor,
     this.borderRadius = const BorderRadius.all(Radius.circular(4.0)),
     this.padding = const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
     this.spacing = 8.0,
     this.fontSize = 14.0,
     this.fontWeight = FontWeight.bold,
+    this.borderWidth = 1.0,
+    this.shadowColor,
+    this.shadowOffset = const Offset(0, 1),
+    this.shadowBlurRadius = 1.0,
   });
 
   /// Creates a [BoxDecoration] for the keys based on the current theme.
   BoxDecoration getBoxDecoration(BuildContext context) {
     final theme = Theme.of(context);
-    final keyColor = theme.colorScheme.surface;
-    final borderColor = theme.colorScheme.onSurface.withAlpha(51);
-    final shadowColor = theme.colorScheme.onSurface.withAlpha(51);
+    final finalKeyColor = keyColor ?? theme.colorScheme.surface;
+    final finalBorderColor =
+        borderColor ?? theme.colorScheme.onSurface.withAlpha(51);
+    final finalShadowColor =
+        shadowColor ?? theme.colorScheme.onSurface.withAlpha(51);
 
     return BoxDecoration(
-      color: keyColor,
+      color: finalKeyColor,
       borderRadius: borderRadius,
-      border: Border.all(color: borderColor),
+      border: Border.all(
+        color: finalBorderColor,
+        width: borderWidth,
+      ),
       boxShadow: [
         BoxShadow(
-          color: shadowColor,
-          offset: const Offset(0, 1),
-          blurRadius: 1.0,
+          color: finalShadowColor,
+          offset: shadowOffset,
+          blurRadius: shadowBlurRadius,
         ),
       ],
     );
