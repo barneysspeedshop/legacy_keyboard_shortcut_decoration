@@ -51,15 +51,17 @@ class LegacyKeyboardShortcut extends StatelessWidget {
     // Split the shortcut string into individual key strings,
     // trimming whitespace and removing any empty parts.
     final keys = _sortKeys(shortcut);
+    final textScaler = MediaQuery.maybeTextScalerOf(context) ?? TextScaler.noScaling;
+    final scale = textScaler.scale(1.0);
 
     if (keys.isEmpty) {
       return const SizedBox.shrink();
     }
 
     if (showIndividualKeys) {
-      return _buildIndividualKeys(context, keys);
+      return _buildIndividualKeys(context, keys, scale);
     } else {
-      return _buildSingleBlock(context, keys);
+      return _buildSingleBlock(context, keys, scale);
     }
   }
 
@@ -67,11 +69,16 @@ class LegacyKeyboardShortcut extends StatelessWidget {
   ///
   /// Modifier keys are sorted first, then function keys, then other keys alphabetically.
   List<String> _sortKeys(String shortcut) {
-    final keys = shortcut
-        .split('+')
-        .map((e) => e.trim().toUpperCase())
-        .where((e) => e.isNotEmpty)
-        .toList();
+    final parts = shortcut.split('+');
+    final List<String> keys = [];
+    for (int i = 0; i < parts.length; i++) {
+      final part = parts[i].trim().toUpperCase();
+      if (part.isNotEmpty) {
+        keys.add(part);
+      } else if (i < parts.length - 1) {
+        keys.add('+');
+      }
+    }
 
     final List<String> modifierKeys = [];
     final List<String> functionKeys = [];
@@ -99,13 +106,13 @@ class LegacyKeyboardShortcut extends StatelessWidget {
   }
 
   /// Builds the shortcut as a single visual block.
-  Widget _buildSingleBlock(BuildContext context, List<String> keys) {
+  Widget _buildSingleBlock(BuildContext context, List<String> keys, double scale) {
     final theme = Theme.of(context);
     final textColor = decoration.textColor ?? theme.colorScheme.onSurface;
 
     return Container(
-      padding: decoration.padding,
-      decoration: decoration.getBoxDecoration(context),
+      padding: decoration.padding * scale,
+      decoration: decoration.getBoxDecoration(context, scale: scale),
       child: Text(
         keys.join(' + ').toUpperCase(),
         style: TextStyle(
@@ -118,18 +125,18 @@ class LegacyKeyboardShortcut extends StatelessWidget {
   }
 
   /// Builds the shortcut as a series of individual key widgets.
-  Widget _buildIndividualKeys(BuildContext context, List<String> keys) {
+  Widget _buildIndividualKeys(BuildContext context, List<String> keys, double scale) {
     final theme = Theme.of(context);
     final plusSignColor = decoration.plusSignColor ??
         (decoration.textColor ?? theme.colorScheme.onSurface).withAlpha(204);
 
     final List<Widget> children = [];
     for (int i = 0; i < keys.length; i++) {
-      children.add(_buildKey(context, keys[i]));
+      children.add(_buildKey(context, keys[i], scale));
 
       // Add a separator if it's not the last key.
       if (i < keys.length - 1) {
-        children.add(SizedBox(width: decoration.spacing / 2));
+        children.add(SizedBox(width: (decoration.spacing / 2) * scale));
         children.add(
           Text(
             '+',
@@ -140,7 +147,7 @@ class LegacyKeyboardShortcut extends StatelessWidget {
             ),
           ),
         );
-        children.add(SizedBox(width: decoration.spacing / 2));
+        children.add(SizedBox(width: (decoration.spacing / 2) * scale));
       }
     }
 
@@ -152,13 +159,13 @@ class LegacyKeyboardShortcut extends StatelessWidget {
   }
 
   /// Builds a single key widget.
-  Widget _buildKey(BuildContext context, String keyLabel) {
+  Widget _buildKey(BuildContext context, String keyLabel, double scale) {
     final theme = Theme.of(context);
     final textColor = decoration.textColor ?? theme.colorScheme.onSurface;
 
     return Container(
-      padding: decoration.padding,
-      decoration: decoration.getBoxDecoration(context),
+      padding: decoration.padding * scale,
+      decoration: decoration.getBoxDecoration(context, scale: scale),
       child: Text(
         keyLabel.toUpperCase(),
         style: TextStyle(
@@ -236,7 +243,7 @@ class LegacyKeyboardShortcutDecoration {
   });
 
   /// Creates a [BoxDecoration] for the keys based on the current theme.
-  BoxDecoration getBoxDecoration(BuildContext context) {
+  BoxDecoration getBoxDecoration(BuildContext context, {double scale = 1.0}) {
     final theme = Theme.of(context);
     final finalKeyColor = keyColor ?? theme.colorScheme.surface;
     final finalBorderColor =
@@ -249,13 +256,13 @@ class LegacyKeyboardShortcutDecoration {
       borderRadius: borderRadius,
       border: Border.all(
         color: finalBorderColor,
-        width: borderWidth,
+        width: borderWidth * scale,
       ),
       boxShadow: [
         BoxShadow(
           color: finalShadowColor,
-          offset: shadowOffset,
-          blurRadius: shadowBlurRadius,
+          offset: shadowOffset * scale,
+          blurRadius: shadowBlurRadius * scale,
         ),
       ],
     );

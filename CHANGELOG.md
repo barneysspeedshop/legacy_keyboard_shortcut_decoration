@@ -1,3 +1,9 @@
+## 1.1.0
+
+* **FEATURE**: Keyboard shortcuts now respect the ambient text scaler (`MediaQuery.textScalerOf`), scaling padding, spacing, border width, and shadow dimensions accordingly.
+* **FEATURE**: Shortcuts can include a literal `+` key by using consecutive `+` separators (e.g., `"CTRL++"` renders as Ctrl and +).
+* **FEATURE**: `LegacyKeyboardShortcutDecoration.getBoxDecoration` now accepts an optional `scale` parameter for use in custom layouts.
+
 ## 1.0.0
 
 * **BREAKING**: The `shortcut` property, which accepted a `String`, has been replaced with the `keys` property, which takes a `List<String>`. This allows for more robust key handling and removes the need for string parsing.
