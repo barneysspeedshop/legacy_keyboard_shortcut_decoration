@@ -15,7 +15,8 @@ Pass a string like `"CTRL + C"` and get a widget that visually represents the ke
 *   Theme-aware: Adapts to your app's light and dark modes.
 *   Highly customizable: Control colors (key, text, border, shadow), border radius and width, spacing, font size/weight, shadow properties, and more.
 *   Simple and lightweight.
-*   Handles multiple key combinations (e.g., "CTRL + ALT + DEL") and recognizes common modifier keys like `CTRL`, `ALT`, `SHIFT`, `META`, and `SUPER`.
+*   Handles multiple key combinations (e.g., "CTRL + ALT + DEL") and recognizes common modifier keys like `CTRL`, `ALT`, `SHIFT`, `CMD`, `META`, and `SUPER`.
+*   On macOS and iOS, authored `Ctrl` shortcuts display as `Cmd` by default (`adaptPrimaryModifier`). Use `formatPlatformShortcut` for the same rewrite in tooltips.
 
 ## Getting started
 

@@ -1,10 +1,54 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+/// True when the platform's primary accelerator is Cmd (macOS / iOS).
+bool get usesMetaPrimaryModifier =>
+    defaultTargetPlatform == TargetPlatform.macOS ||
+    defaultTargetPlatform == TargetPlatform.iOS;
+
+/// Rewrites authored `Ctrl` / `Control` tokens for display on the current
+/// platform.
+///
+/// On Apple platforms those tokens become `Cmd`. Elsewhere the string is
+/// returned unchanged. Works for single shortcuts (`Ctrl+S`) and free text
+/// that embeds them (`Ctrl+= / Ctrl+-`).
+///
+/// Set [adaptPrimaryModifier] to `false` to skip the Ctrl→Cmd rewrite.
+String formatPlatformShortcut(
+  String shortcut, {
+  bool adaptPrimaryModifier = true,
+}) {
+  if (!adaptPrimaryModifier || !usesMetaPrimaryModifier) return shortcut;
+  return shortcut.replaceAllMapped(
+    RegExp(r'\bControl\b|\bCtrl\b', caseSensitive: false),
+    (_) => 'Cmd',
+  );
+}
+
+List<String> _splitShortcutParts(String shortcut) {
+  final parts = shortcut.split('+');
+  final keys = <String>[];
+  for (var i = 0; i < parts.length; i++) {
+    final part = parts[i].trim();
+    if (part.isNotEmpty) {
+      keys.add(part);
+    } else if (i < parts.length - 1) {
+      // Consecutive `+` separators encode a literal `+` key (e.g. `Ctrl++`).
+      keys.add('+');
+    }
+  }
+  return keys;
+}
 
 /// A widget that displays a keyboard shortcut combination with a visual
 /// representation of keyboard keys.
 ///
 /// It takes a [shortcut] string like `"CTRL + C"` and renders it as a row
 /// of styled widgets that look like keyboard keys.
+///
+/// On macOS and iOS, when [adaptPrimaryModifier] is true (the default), `Ctrl`
+/// and `Control` are displayed as `Cmd` so menus match Apple conventions while
+/// call sites can keep authoring shortcuts with Ctrl.
 class LegacyKeyboardShortcut extends StatelessWidget {
   /// The string representation of the keyboard shortcut, e.g., "CTRL + C".
   /// The keys should be separated by '+'.
@@ -16,6 +60,9 @@ class LegacyKeyboardShortcut extends StatelessWidget {
   /// Whether to show the shortcut as individual keys or as a single block.
   final bool showIndividualKeys;
 
+  /// When true (default), replaces Ctrl with Cmd on Apple platforms.
+  final bool adaptPrimaryModifier;
+
   /// Creates a widget to display a keyboard shortcut.
   ///
   /// The [shortcut] string is parsed by splitting on '+'. Each part is trimmed
@@ -25,10 +72,21 @@ class LegacyKeyboardShortcut extends StatelessWidget {
     required this.shortcut,
     this.decoration = const LegacyKeyboardShortcutDecoration(),
     this.showIndividualKeys = true,
+    this.adaptPrimaryModifier = true,
   });
 
   /// A list of modifier keys in a specific order for sorting.
-  static const _modifierKeys = ['CTRL', 'ALT', 'SHIFT', 'META', 'SUPER'];
+  ///
+  /// Includes both Ctrl (non-Apple primary) and Cmd (Apple primary) so mixed
+  /// authored strings sort correctly after platform adaptation.
+  static const _modifierKeys = [
+    'CTRL',
+    'ALT',
+    'SHIFT',
+    'CMD',
+    'META',
+    'SUPER',
+  ];
 
   /// A list of function keys in a specific order for sorting.
   static const _functionKeys = [
@@ -51,7 +109,8 @@ class LegacyKeyboardShortcut extends StatelessWidget {
     // Split the shortcut string into individual key strings,
     // trimming whitespace and removing any empty parts.
     final keys = _sortKeys(shortcut);
-    final textScaler = MediaQuery.maybeTextScalerOf(context) ?? TextScaler.noScaling;
+    final textScaler =
+        MediaQuery.maybeTextScalerOf(context) ?? TextScaler.noScaling;
     final scale = textScaler.scale(1.0);
 
     if (keys.isEmpty) {
@@ -65,20 +124,35 @@ class LegacyKeyboardShortcut extends StatelessWidget {
     }
   }
 
+  /// Normalizes a single key token for sorting / display.
+  String _normalizeKey(String key) {
+    final upper = key.toUpperCase();
+    switch (upper) {
+      case 'CONTROL':
+        return 'CTRL';
+      case 'COMMAND':
+      case 'CMD':
+      case '⌘':
+        return 'CMD';
+      case 'OPTION':
+      case 'OPT':
+      case '⌥':
+        return 'ALT';
+      default:
+        return upper;
+    }
+  }
+
   /// Sorts the keys in the shortcut string.
   ///
   /// Modifier keys are sorted first, then function keys, then other keys alphabetically.
   List<String> _sortKeys(String shortcut) {
-    final parts = shortcut.split('+');
-    final List<String> keys = [];
-    for (int i = 0; i < parts.length; i++) {
-      final part = parts[i].trim().toUpperCase();
-      if (part.isNotEmpty) {
-        keys.add(part);
-      } else if (i < parts.length - 1) {
-        keys.add('+');
-      }
-    }
+    final adapted = formatPlatformShortcut(
+      shortcut,
+      adaptPrimaryModifier: adaptPrimaryModifier,
+    );
+    final parts = _splitShortcutParts(adapted);
+    final keys = parts.map(_normalizeKey).toList();
 
     final List<String> modifierKeys = [];
     final List<String> functionKeys = [];
@@ -106,7 +180,11 @@ class LegacyKeyboardShortcut extends StatelessWidget {
   }
 
   /// Builds the shortcut as a single visual block.
-  Widget _buildSingleBlock(BuildContext context, List<String> keys, double scale) {
+  Widget _buildSingleBlock(
+    BuildContext context,
+    List<String> keys,
+    double scale,
+  ) {
     final theme = Theme.of(context);
     final textColor = decoration.textColor ?? theme.colorScheme.onSurface;
 
@@ -125,7 +203,11 @@ class LegacyKeyboardShortcut extends StatelessWidget {
   }
 
   /// Builds the shortcut as a series of individual key widgets.
-  Widget _buildIndividualKeys(BuildContext context, List<String> keys, double scale) {
+  Widget _buildIndividualKeys(
+    BuildContext context,
+    List<String> keys,
+    double scale,
+  ) {
     final theme = Theme.of(context);
     final plusSignColor = decoration.plusSignColor ??
         (decoration.textColor ?? theme.colorScheme.onSurface).withAlpha(204);

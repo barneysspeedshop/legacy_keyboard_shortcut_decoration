@@ -1,3 +1,9 @@
+## 1.2.0
+
+* **FEATURE**: On macOS and iOS, `Ctrl` / `Control` in shortcut strings are displayed as `Cmd` by default (Apple primary-modifier convention). Disable with `adaptPrimaryModifier: false`.
+* **FEATURE**: Added `formatPlatformShortcut` for the same Ctrl→Cmd rewrite in tooltips and plain-text labels.
+* **FEATURE**: Recognizes `Cmd` / `Command` / `⌘` and `Option` / `Opt` / `⌥` as modifier aliases.
+
 ## 1.1.0
 
 * **FEATURE**: Keyboard shortcuts now respect the ambient text scaler (`MediaQuery.textScalerOf`), scaling padding, spacing, border width, and shadow dimensions accordingly.
