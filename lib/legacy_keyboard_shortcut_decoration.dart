@@ -79,14 +79,7 @@ class LegacyKeyboardShortcut extends StatelessWidget {
   ///
   /// Includes both Ctrl (non-Apple primary) and Cmd (Apple primary) so mixed
   /// authored strings sort correctly after platform adaptation.
-  static const _modifierKeys = [
-    'CTRL',
-    'ALT',
-    'SHIFT',
-    'CMD',
-    'META',
-    'SUPER',
-  ];
+  static const _modifierKeys = ['CTRL', 'ALT', 'SHIFT', 'CMD', 'META', 'SUPER'];
 
   /// A list of function keys in a specific order for sorting.
   static const _functionKeys = [
@@ -210,7 +203,8 @@ class LegacyKeyboardShortcut extends StatelessWidget {
     double scale,
   ) {
     final theme = Theme.of(context);
-    final plusSignColor = decoration.plusSignColor ??
+    final plusSignColor =
+        decoration.plusSignColor ??
         (decoration.textColor ?? theme.colorScheme.onSurface).withAlpha(204);
 
     final List<Widget> children = [];
@@ -337,10 +331,7 @@ class LegacyKeyboardShortcutDecoration {
     return BoxDecoration(
       color: finalKeyColor,
       borderRadius: borderRadius,
-      border: Border.all(
-        color: finalBorderColor,
-        width: borderWidth * scale,
-      ),
+      border: Border.all(color: finalBorderColor, width: borderWidth * scale),
       boxShadow: [
         BoxShadow(
           color: finalShadowColor,
