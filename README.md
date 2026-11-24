@@ -34,7 +34,7 @@ import 'package:legacy_keyboard_shortcut_decoration/legacy_keyboard_shortcut_dec
 ## Usage
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:legacy_keyboard_shortcut_decoration/legacy_keyboard_shortcut_decoration.dart';
 
 void main() {
@@ -139,3 +139,7 @@ Contributions are welcome! Please feel free to submit a pull request or open an 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Material UI compatibility
+
+This release requires Dart 3.13 and Flutter 3.47 or newer. Import `package:material_ui/material_ui.dart` in consuming widgets and use its Material types (including `ThemeData`). Legacy Flutter Material classes are distinct types. Widget behavior and existing options are retained.

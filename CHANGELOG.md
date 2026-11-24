@@ -1,3 +1,7 @@
+## 2.0.0
+
+- Migrate library, tests, and example to standalone Material UI without changing widget behavior. Requires Dart 3.13 and Flutter 3.47 or newer; consumers must also use `material_ui` for Material types.
+
 ## 1.2.0
 
 * **FEATURE**: On macOS and iOS, `Ctrl` / `Control` in shortcut strings are displayed as `Cmd` by default (Apple primary-modifier convention). Disable with `adaptPrimaryModifier: false`.
