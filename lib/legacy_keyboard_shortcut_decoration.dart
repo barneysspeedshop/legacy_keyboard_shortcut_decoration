@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// True when the platform's primary accelerator is Cmd (macOS / iOS).
 bool get usesMetaPrimaryModifier =>
@@ -145,7 +145,8 @@ class LegacyKeyboardShortcut extends StatelessWidget {
 
   /// Sorts the keys in the shortcut string.
   ///
-  /// Modifier keys are sorted first, then function keys, then other keys alphabetically.
+  /// Modifier keys are sorted first, then function keys,
+  /// then other keys alphabetically.
   List<String> _sortKeys(String shortcut) {
     final adapted = formatPlatformShortcut(
       shortcut,
